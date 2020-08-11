@@ -10,7 +10,7 @@ const Transaction = require('../../models/Transaction');
 // disc      get all transaction
 // ascess    public
 
-router.get('/',auth,adminAscess, async(req,res)=>{
+router.get('/alltransaction', async(req,res)=>{
     try {
         const transaction = await Transaction.find().populate('user',['linkSendTime','ethAddress','btcAddress','count','forgottenPasswordTime','forgotPasswordOtp','createdAt'])
         res.json(transaction)
