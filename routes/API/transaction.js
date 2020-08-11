@@ -1,18 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/auth');
+const auth = require('../middleware/auth')
+const adminAscess = require('../middleware/adminAuth');
 const Transaction = require('../../models/Transaction');
-const User = require('../../models/User');
-const { check, validationResult } = require("express-validator/check");
-const request=require('request');
-const config=require('config');
+
 
 
 // route     GET api/transaction
 // disc      get all transaction
 // ascess    public
 
-router.get('/',async(req,res)=>{
+router.get('/',auth,adminAscess, async(req,res)=>{
     try {
         const transaction = await Transaction.find().populate('user',['linkSendTime','ethAddress','btcAddress','count','forgottenPasswordTime','forgotPasswordOtp','createdAt'])
         res.json(transaction)

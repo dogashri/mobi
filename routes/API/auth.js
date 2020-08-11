@@ -7,6 +7,7 @@ const { check, validationResult } = require('express-validator')
 const jwt = require('jsonwebtoken')
 const config = require('config')
 const bcrypt = require('bcryptjs')
+const crypto = require('crypto')
 // Route   GET api/auth
 // disc    test roue
 // ascess  public
@@ -24,8 +25,8 @@ router.get('/',auth,async(req,res)=>{
 })
 
 // Route    POST api/auth
-// disc     Register user
-// Ascess   Public
+// disc     authenticate the admin and get the token
+// Ascess   Private
 
 router.post('/',[
     check('email','Please include a valid email').isEmail(),
@@ -54,9 +55,12 @@ async(req,res)=>{
         // reurn jsonwebtoken
         const payload = {
             user:{
-                id:user.id
+                id:user.id,
+                email:user.email,
+                random:crypto.randomBytes(20).toString('hex')
             }
         }
+        console.log(payload)
         jwt.sign(payload,config.get('jwtToken'),
         {expiresIn:360000},
         (err,token)=>{
